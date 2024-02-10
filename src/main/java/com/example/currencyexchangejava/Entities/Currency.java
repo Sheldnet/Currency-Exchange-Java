@@ -19,6 +19,12 @@ public class Currency {
         this.fullName = fullName;
     }
 
+    public Currency(String code, String fullName, String sign) {
+        this.code = code;
+        this.fullName = fullName;
+        this.sign = sign;
+    }
+
     @Id
     @Column(name = "Id")
     Integer id;

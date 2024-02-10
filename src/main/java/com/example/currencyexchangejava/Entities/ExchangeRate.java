@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
-@NoArgsConstructor
 @Table(name = "ExchangeRates")
 public class ExchangeRate {
 
