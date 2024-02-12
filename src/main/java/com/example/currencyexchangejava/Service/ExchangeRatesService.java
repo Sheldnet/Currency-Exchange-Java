@@ -1,17 +1,15 @@
 package com.example.currencyexchangejava.Service;
 
 import com.example.currencyexchangejava.Entities.ExchangeRate;
+import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public interface ExchangeRatesService {
-    Optional<List<ExchangeRate>> getAll();
+    public List<ExchangeRate> findAll();
+    public ExchangeRate findExchangeRate(int base, int target);
 
-    Optional<ExchangeRate> getExchangeRateByCodes(String baseCurrencyCode, String targetCurrencyCode);
+    public ExchangeRate addExchangeRate(ExchangeRate exchangeRate);
 
-    Optional<Integer> deleteExchangeRate(Integer id);
-
-    Optional<ExchangeRate> insertExchangeRate(Integer base, Integer target, BigDecimal rate);
 }

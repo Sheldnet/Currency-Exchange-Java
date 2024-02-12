@@ -1,27 +1,30 @@
 package com.example.currencyexchangejava.Entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 @Table(name = "ExchangeRates")
 public class ExchangeRate {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "BaseCurrencyId", referencedColumnName = "id")
-    Currency baseCurrencyId;
+    @JoinColumn(name = "BaseCurrencyId")
+    Integer baseCurrencyId;
 
-    @ManyToOne
-    @JoinColumn(name = "TargetCurrentId", referencedColumnName = "id")
-    Currency targetCurrentId;
+    @JoinColumn(name = "TargetCurrencyId")
+    Integer targetCurrencyId;
 
     @Column(name = "Rate")
     BigDecimal rate;

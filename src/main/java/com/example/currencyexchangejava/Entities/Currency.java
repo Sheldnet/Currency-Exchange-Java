@@ -1,18 +1,21 @@
 package com.example.currencyexchangejava.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Objects;
 
-@Data
+
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Table(name = "Currencies")
+@ToString
 public class Currency {
     public Currency(String code, String fullName) {
         this.code = code;
@@ -27,6 +30,7 @@ public class Currency {
 
     @Id
     @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     @Column(name = "Code")
     String code;
