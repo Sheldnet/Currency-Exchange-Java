@@ -3,9 +3,6 @@ package com.example.currencyexchangejava.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 @Entity
@@ -18,15 +15,20 @@ public class ExchangeRate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    Integer id;
+    private int id;
 
     @JoinColumn(name = "BaseCurrencyId")
-    Integer baseCurrencyId;
+    private int baseCurrencyId;
 
     @JoinColumn(name = "TargetCurrencyId")
-    Integer targetCurrencyId;
+    private int targetCurrencyId;
 
     @Column(name = "Rate")
-    BigDecimal rate;
+    private Double rate;
 
+    public ExchangeRate(int baseCurrencyId, int targetCurrencyId, Double rate) {
+        this.baseCurrencyId = baseCurrencyId;
+        this.targetCurrencyId = targetCurrencyId;
+        this.rate = rate;
+    }
 }

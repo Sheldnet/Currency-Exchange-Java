@@ -1,8 +1,13 @@
 package com.example.currencyexchangejava.DTO;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class CurrencyDTO {
     private String code;
     private String fullName;

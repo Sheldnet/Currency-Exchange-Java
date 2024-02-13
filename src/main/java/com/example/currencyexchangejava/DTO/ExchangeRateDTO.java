@@ -1,12 +1,17 @@
 package com.example.currencyexchangejava.DTO;
 
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class ExchangeRateDTO {
     private String baseCurrencyCode;
     private String targetCurrencyCode;
-    private BigDecimal rate;
+    private Double rate;
+    private String amount;
 }

@@ -31,13 +31,13 @@ public class Currency {
     @Id
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private int id;
     @Column(name = "Code")
-    String code;
+    private String code;
     @Column(name = "FullName")
-    String fullName;
+    private String fullName;
     @Column(name = "Sign")
-    String sign;
+    private String sign;
 
     @Override
     public boolean equals(Object o) {
