@@ -51,8 +51,8 @@ public class FactoryServiceImpl implements FactoryService {
     public ExchangeRateDTORequest converterExchangeRateIntoExchangeRateDTO(ExchangeRate exchangeRate) {
         return new ExchangeRateDTORequest(
                 exchangeRate.getId(),
-                currenciesService.findById(exchangeRate.getBaseCurrencyId()),
-                currenciesService.findById(exchangeRate.getTargetCurrencyId()),
+                currenciesService.findById(exchangeRate.getId()),
+                currenciesService.findById(exchangeRate.getId()),
                 exchangeRate.getRate()
         );
     }
@@ -94,9 +94,10 @@ public class FactoryServiceImpl implements FactoryService {
 
     @Override
     public ExchangeRate convertExchangeDTOIntoExchange(ExchangeRateDTO exchangeRateDTO) {
-        int base = currenciesService.findByCode(exchangeRateDTO.getBaseCurrencyCode()).getId();
-        int target = currenciesService.findByCode(exchangeRateDTO.getTargetCurrencyCode()).getId();
-        return new ExchangeRate(base, target, exchangeRateDTO.getRate());
+//        Currency base = currenciesService.findByCode(exchangeRateDTO.getBaseCurrencyCode());
+//        Currency target = currenciesService.findByCode(exchangeRateDTO.getTargetCurrencyCode());
+//        return new ExchangeRate(base, target, exchangeRateDTO.getRate());
+        return null;
     }
 
     @Override
@@ -106,38 +107,41 @@ public class FactoryServiceImpl implements FactoryService {
         double rate = 0;
         double answer = 0.0;
 
-        if (exchangeRatesService.findExchangeRate(convertBaseId(to + from),
-        convertTargetId(from + to)) != null){
-            rate = exchangeRatesService.findExchangeRate(convertBaseId(from + to),
-                    convertTargetId(from + to)).getRate();
+        Currency baseCurrency = currenciesService.findByCode(from);
+        Currency targetCurrency = currenciesService.findByCode(to);
+
+        ExchangeRate exchangeRate = exchangeRatesService.findExchangeRate(baseCurrency, targetCurrency);
+        if (exchangeRate != null) {
+            rate = exchangeRate.getRate();
             answer = roundDoubles(amountDouble * rate);
         } else {
-            if (exchangeRatesService.findExchangeRate(convertBaseId(to + from),
-                    convertTargetId(to + from)) != null) {
+            Currency inverseBaseCurrency = currenciesService.findByCode(to);
+            Currency inverseTargetCurrency = currenciesService.findByCode(from);
+            ExchangeRate inverseExchangeRate = exchangeRatesService.findExchangeRate(inverseBaseCurrency, inverseTargetCurrency);
 
-                rate = 1 / exchangeRatesService.findExchangeRate(convertBaseId(to + from),
-                        convertTargetId(to + from)).getRate();
+            if (inverseExchangeRate != null) {
+                rate = 1 / inverseExchangeRate.getRate();
                 answer = roundDoubles(rate * amountDouble);
-
+            } else {
                 try {
-                    double usdFromRate = exchangeRatesService.findExchangeRate(convertBaseId(base + from),
-                            convertTargetId(base + from)).getRate();
-                    double usdToRate = exchangeRatesService.findExchangeRate(convertBaseId(base + to),
-                            convertTargetId(base + to)).getRate();
+                    double usdFromRate = exchangeRatesService.findExchangeRate(currenciesService.findByCode(base + from), baseCurrency).getRate();
+                    double usdToRate = exchangeRatesService.findExchangeRate(currenciesService.findByCode(base + to), baseCurrency).getRate();
                     rate = 1 / (usdFromRate / usdToRate);
                     answer = roundDoubles(rate * amountDouble);
                 } catch (RuntimeException e) {
-                    throw new Exception("курса с такими валютами нет");
+                    throw new Exception("Курса с такими валютами нет");
                 }
             }
         }
-        return  new ExchangeDTOAmount(
-                currenciesService.findByCode(from),
-                currenciesService.findByCode(to),
+
+        return new ExchangeDTOAmount(
+                baseCurrency,
+                targetCurrency,
                 new BigDecimal(Double.toString(rate)).setScale(2, RoundingMode.HALF_DOWN),
                 amount,
                 answer);
     }
+
     private static double roundDoubles(double number) {
         BigDecimal bd = new BigDecimal(Double.toString(number));
         bd = bd.setScale(2, RoundingMode.DOWN);

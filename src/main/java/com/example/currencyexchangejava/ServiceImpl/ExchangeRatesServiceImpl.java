@@ -1,5 +1,6 @@
 package com.example.currencyexchangejava.ServiceImpl;
 
+import com.example.currencyexchangejava.Entities.Currency;
 import com.example.currencyexchangejava.Entities.ExchangeRate;
 import com.example.currencyexchangejava.Repositories.ExchangeRateRepository;
 import com.example.currencyexchangejava.Service.ExchangeRatesService;
@@ -24,9 +25,9 @@ public class ExchangeRatesServiceImpl implements ExchangeRatesService {
     }
 
     @Override
-    public ExchangeRate findExchangeRate(int base, int target) {
-        return exchangeRateRepository.findByBaseCurrencyIdAndAndTargetCurrencyId(base,target);
-
+    public ExchangeRate findExchangeRate(Currency base, Currency target) {
+        //return exchangeRateRepository.findByBaseCurrencyIdAndAndTargetCurrencyId(base,target);
+    return null;
     }
 
     @Override

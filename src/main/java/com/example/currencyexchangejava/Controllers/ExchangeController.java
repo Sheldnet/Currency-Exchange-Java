@@ -3,6 +3,7 @@ package com.example.currencyexchangejava.Controllers;
 import com.example.currencyexchangejava.DTO.ExchangeDTOAmount;
 import com.example.currencyexchangejava.DTO.ExchangeRateDTO;
 import com.example.currencyexchangejava.DTO.ExchangeRateDTORequest;
+import com.example.currencyexchangejava.Entities.Currency;
 import com.example.currencyexchangejava.Entities.ExchangeRate;
 import com.example.currencyexchangejava.Service.ExchangeRatesService;
 import com.example.currencyexchangejava.Service.FactoryService;
@@ -34,19 +35,26 @@ public class ExchangeController {
         }
     }
 
-    @GetMapping("/exchangeRate/{exchangeRate}")
-    public ResponseEntity<ExchangeRateDTORequest> getExchangeRate(@PathVariable("exchangeRate") String code) throws Exception {
-        if (code.isBlank()) {
-            throw new Exception("не введены данные");
-        }
-        try {
-            return new ResponseEntity<>(factoryService.converterExchangeRateIntoExchangeRateDTO(
-                    exchangeRatesService.findExchangeRate(factoryService.convertBaseId(code),
-                            factoryService.convertTargetId(code))), HttpStatus.OK);
-        } catch (DataAccessException e) {
-            throw new Exception("не удаётся подключиться к бд");
-        }
-    }
+//    @GetMapping("/exchangeRate/{exchangeRate}")
+//    public ResponseEntity<ExchangeRateDTORequest> getExchangeRate(@PathVariable("exchangeRate") String code) throws Exception {
+//        if (code.isBlank()) {
+//            throw new Exception("Не введены данные");
+//        }
+//        try {
+//            Currency baseCurrency = currenciesService.findByCode(code);
+//            Currency targetCurrency = currenciesService.findByCode(code);
+//            ExchangeRate exchangeRate = exchangeRatesService.findExchangeRate(baseCurrency, targetCurrency);
+//
+//            if (exchangeRate != null) {
+//                return new ResponseEntity<>(factoryService.converterExchangeRateIntoExchangeRateDTO(exchangeRate), HttpStatus.OK);
+//            } else {
+//                throw new Exception("Курс обмена не найден для валюты с кодом " + code);
+//            }
+//        } catch (DataAccessException e) {
+//            throw new Exception("Не удаётся подключиться к базе данных");
+//        }
+//    }
+
 
     @PostMapping("/exchangeRates")
     public ResponseEntity<ExchangeRateDTORequest> addExchangeRate(ExchangeRateDTO exchangeRateDTO) throws Exception {
@@ -63,29 +71,29 @@ public class ExchangeController {
         }
     }
 
-    @PatchMapping("/exchangeRate/{code}")
-    public ResponseEntity<ExchangeRateDTORequest> updateExchangeRate(@PathVariable("code") String code, String rate) throws Exception {
-        try {
-            if (code.isBlank() || Double.parseDouble(rate) <= 0) {
-                throw new Exception("не корректно введены данные");
-            }
-        } catch (NumberFormatException e) {
-            throw new Exception("не корректно введены данные");
-        }
-
-        try {
-            var exchangeRate = exchangeRatesService.findExchangeRate(
-                    factoryService.convertBaseId(code), factoryService.convertTargetId(code));
-
-            exchangeRate.setRate(Double.parseDouble(rate));
-            exchangeRatesService.addExchangeRate(exchangeRate);
-            return new ResponseEntity<>(factoryService.converterExchangeRateIntoExchangeRateDTO(
-                    exchangeRatesService.findExchangeRate(factoryService.convertBaseId(code),
-                            factoryService.convertTargetId(code))), HttpStatus.OK);
-        } catch (DataAccessException e) {
-            throw new Exception("не удаётся подключиться к бд");
-        }
-    }
+//    @PatchMapping("/exchangeRate/{code}")
+//    public ResponseEntity<ExchangeRateDTORequest> updateExchangeRate(@PathVariable("code") String code, String rate) throws Exception {
+//        try {
+//            if (code.isBlank() || Double.parseDouble(rate) <= 0) {
+//                throw new Exception("не корректно введены данные");
+//            }
+//        } catch (NumberFormatException e) {
+//            throw new Exception("не корректно введены данные");
+//        }
+//
+//        try {
+//            var exchangeRate = exchangeRatesService.findExchangeRate(
+//                    factoryService.convertBaseId(code), factoryService.convertTargetId(code));
+//
+//            exchangeRate.setRate(Double.parseDouble(rate));
+//            exchangeRatesService.addExchangeRate(exchangeRate);
+//            return new ResponseEntity<>(factoryService.converterExchangeRateIntoExchangeRateDTO(
+//                    exchangeRatesService.findExchangeRate(factoryService.convertBaseId(code),
+//                            factoryService.convertTargetId(code))), HttpStatus.OK);
+//        } catch (DataAccessException e) {
+//            throw new Exception("не удаётся подключиться к бд");
+//        }
+//    }
 
     @GetMapping("/exchange")
     public ResponseEntity<ExchangeDTOAmount> getExchange(@RequestParam("from") String from,

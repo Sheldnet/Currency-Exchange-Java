@@ -29,7 +29,7 @@ public class CurrencyController {
         return "server is alive";
     }
 
-    @GetMapping("/currencies")
+    @GetMapping("/сurrencies")
     public ResponseEntity<List<Currency>> getCurrencies() throws Exception {
         try {
             return new ResponseEntity<>(currenciesService.findAll(), HttpStatus.OK);
@@ -38,7 +38,7 @@ public class CurrencyController {
         }
     }
 
-    @GetMapping("/currencies/{currency}")
+    @GetMapping("/currency/{currency}")
     public ResponseEntity<Currency> getCurrencyByCode(@PathVariable("currency") String code) throws Exception {
         if (code.isBlank()) {
             throw new Exception("код валюты отсутствует");

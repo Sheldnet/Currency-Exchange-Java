@@ -18,15 +18,17 @@ public class ExchangeRate {
     private int id;
 
     @JoinColumn(name = "BaseCurrencyId")
-    private int baseCurrencyId;
+    @ManyToOne
+    private Currency baseCurrencyId;
 
-    @JoinColumn(name = "TargetCurrencyId")
-    private int targetCurrencyId;
+    //@JoinColumn(name = "TargetCurrencyId")
+    @ManyToOne
+    private Currency targetCurrencyId;
 
     @Column(name = "Rate")
     private Double rate;
 
-    public ExchangeRate(int baseCurrencyId, int targetCurrencyId, Double rate) {
+    public ExchangeRate(Currency baseCurrencyId, Currency targetCurrencyId, Double rate) {
         this.baseCurrencyId = baseCurrencyId;
         this.targetCurrencyId = targetCurrencyId;
         this.rate = rate;
