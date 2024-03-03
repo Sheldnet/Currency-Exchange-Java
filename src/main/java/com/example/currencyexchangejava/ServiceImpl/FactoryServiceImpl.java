@@ -2,7 +2,7 @@ package com.example.currencyexchangejava.ServiceImpl;
 
 import com.example.currencyexchangejava.DTO.CurrencyDTO;
 import com.example.currencyexchangejava.DTO.ExchangeDTOAmount;
-import com.example.currencyexchangejava.DTO.ExchangeRateDTO;
+import com.example.currencyexchangejava.DTO.ExchangeRateDTOResponse;
 import com.example.currencyexchangejava.DTO.ExchangeRateDTORequest;
 import com.example.currencyexchangejava.Entities.Currency;
 import com.example.currencyexchangejava.Entities.ExchangeRate;
@@ -93,11 +93,10 @@ public class FactoryServiceImpl implements FactoryService {
     }
 
     @Override
-    public ExchangeRate convertExchangeDTOIntoExchange(ExchangeRateDTO exchangeRateDTO) {
-//        Currency base = currenciesService.findByCode(exchangeRateDTO.getBaseCurrencyCode());
-//        Currency target = currenciesService.findByCode(exchangeRateDTO.getTargetCurrencyCode());
-//        return new ExchangeRate(base, target, exchangeRateDTO.getRate());
-        return null;
+    public ExchangeRate convertExchangeDTOIntoExchange(ExchangeRateDTOResponse exchangeRateDTOResponse) {
+        Currency base = currenciesService.findByCode(exchangeRateDTOResponse.getBaseCurrencyCode());
+        Currency target = currenciesService.findByCode(exchangeRateDTOResponse.getTargetCurrencyCode());
+       return new ExchangeRate(base, target, exchangeRateDTOResponse.getRate());
     }
 
     @Override

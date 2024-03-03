@@ -26,8 +26,7 @@ public class ExchangeRatesServiceImpl implements ExchangeRatesService {
 
     @Override
     public ExchangeRate findExchangeRate(Currency base, Currency target) {
-        //return exchangeRateRepository.findByBaseCurrencyIdAndAndTargetCurrencyId(base,target);
-    return null;
+        return exchangeRateRepository.findByBaseCurrencyIdAndAndTargetCurrencyId(base,target);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.example.currencyexchangejava.Service;
 
 import com.example.currencyexchangejava.DTO.CurrencyDTO;
 import com.example.currencyexchangejava.DTO.ExchangeDTOAmount;
-import com.example.currencyexchangejava.DTO.ExchangeRateDTO;
+import com.example.currencyexchangejava.DTO.ExchangeRateDTOResponse;
 import com.example.currencyexchangejava.DTO.ExchangeRateDTORequest;
 import com.example.currencyexchangejava.Entities.Currency;
 import com.example.currencyexchangejava.Entities.ExchangeRate;
@@ -29,7 +29,7 @@ public interface FactoryService {
 
     public String getConvertStringTargetCode(String line) throws Exception;
 
-    public ExchangeRate convertExchangeDTOIntoExchange(ExchangeRateDTO exchangeRateDTO);
+    public ExchangeRate convertExchangeDTOIntoExchange(ExchangeRateDTOResponse exchangeRateDTOResponse);
 
     public ExchangeDTOAmount getAmount(String from, String to, String amount) throws Exception;
 

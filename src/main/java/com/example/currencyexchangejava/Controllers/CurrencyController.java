@@ -53,6 +53,7 @@ public class CurrencyController {
         }
     }
 
+    //TODO: Переделать логику добавления currency, вообще не понял зачем тут ДТО
     @PostMapping("/currencies")
     public ResponseEntity<Currency> addCurrency(CurrencyDTO currencyDTO) throws Exception {
         if (currencyDTO.getCode().isEmpty()

@@ -9,23 +9,23 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-@Table(name = "ExchangeRates")
+@Table(name = "exchangerates")
 public class ExchangeRate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
+    @Column(name = "id")
     private int id;
 
-    @JoinColumn(name = "BaseCurrencyId")
+    @JoinColumn(name = "basecurrencyid")
     @ManyToOne
     private Currency baseCurrencyId;
 
-    //@JoinColumn(name = "TargetCurrencyId")
+    @JoinColumn(name = "targetcurrencyid")
     @ManyToOne
     private Currency targetCurrencyId;
 
-    @Column(name = "Rate")
+    @Column(name = "rate")
     private Double rate;
 
     public ExchangeRate(Currency baseCurrencyId, Currency targetCurrencyId, Double rate) {
