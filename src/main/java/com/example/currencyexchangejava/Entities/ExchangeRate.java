@@ -18,11 +18,11 @@ public class ExchangeRate {
     private int id;
 
     @JoinColumn(name = "basecurrencyid")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Currency baseCurrencyId;
 
     @JoinColumn(name = "targetcurrencyid")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Currency targetCurrencyId;
 
     @Column(name = "rate")
