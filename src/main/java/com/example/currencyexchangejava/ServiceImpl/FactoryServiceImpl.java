@@ -49,48 +49,54 @@ public class FactoryServiceImpl implements FactoryService {
 
     @Override
     public ExchangeRateDTORequest converterExchangeRateIntoExchangeRateDTO(ExchangeRate exchangeRate) {
+        Currency baseCurrency = exchangeRate.getBaseCurrencyId();
+        Currency targetCurrency = exchangeRate.getTargetCurrencyId();
+
         return new ExchangeRateDTORequest(
                 exchangeRate.getId(),
-                currenciesService.findById(exchangeRate.getId()),
-                currenciesService.findById(exchangeRate.getId()),
+                baseCurrency,
+                targetCurrency,
                 exchangeRate.getRate()
         );
     }
 
     @Override
     public int convertBaseId(String code) throws Exception {
-        String baseCurrency = getConvertStringBaseCode(code);
-        if (currenciesService.findByCode(baseCurrency) == null) {
-            throw new Exception("не найден обменный курс" + code);
+        String baseCurrencyCode = getConvertStringBaseCode(code);
+        Currency baseCurrency = currenciesService.findByCode(baseCurrencyCode);
+        if (baseCurrency == null) {
+            throw new Exception("Не найден обменный курс для валюты " + baseCurrencyCode);
         }
-        return currenciesService.findByCode(baseCurrency).getId();
-    }
-
-    @Override
-    public String getConvertStringBaseCode(String line) throws Exception {
-        if (line.length() != 6) {
-            throw new Exception("не корректно указаны валюты");
-        }
-        return line.substring(0,3);
+        return baseCurrency.getId();
     }
 
     @Override
     public int convertTargetId(String code) throws Exception {
-        String targetCurrency = getConvertStringTargetCode(code);
-
-        if (currenciesService.findByCode(targetCurrency) == null) {
-            throw new Exception("не найден обменный курс" + code);
+        String targetCurrencyCode = getConvertStringTargetCode(code);
+        Currency targetCurrency = currenciesService.findByCode(targetCurrencyCode);
+        if (targetCurrency == null) {
+            throw new Exception("Не найден обменный курс для валюты " + targetCurrencyCode);
         }
-        return currenciesService.findByCode(targetCurrency).getId();
+        return targetCurrency.getId();
+    }
+
+
+    @Override
+    public String getConvertStringBaseCode(String line) throws Exception {
+        if (line.length() != 6 && line.length() != 3) {
+            throw new Exception("Некорректно указаны валюты");
+        }
+        return (line.length() == 3) ? line : line.substring(0, 3);
     }
 
     @Override
     public String getConvertStringTargetCode(String line) throws Exception {
-        if (line.length() < 6) {
-            throw new Exception("не указаны валюты");
+        if (line.length() != 6 && line.length() != 3) {
+            throw new Exception("Некорректно указаны валюты");
         }
-        return line.substring(3,6);
+        return (line.length() == 3) ? line : line.substring(3, 6);
     }
+
 
     @Override
     public ExchangeRate convertExchangeDTOIntoExchange(ExchangeRateDTOResponse exchangeRateDTOResponse) {
