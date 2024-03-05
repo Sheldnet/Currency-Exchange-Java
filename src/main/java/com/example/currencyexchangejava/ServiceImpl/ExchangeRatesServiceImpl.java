@@ -33,4 +33,9 @@ public class ExchangeRatesServiceImpl implements ExchangeRatesService {
     public ExchangeRate addExchangeRate(ExchangeRate exchangeRate) {
         return exchangeRateRepository.save(exchangeRate);
     }
+
+    @Override
+    public void updateExchangeRate(ExchangeRate exchangeRate) {
+        exchangeRateRepository.save(exchangeRate);
+    }
 }

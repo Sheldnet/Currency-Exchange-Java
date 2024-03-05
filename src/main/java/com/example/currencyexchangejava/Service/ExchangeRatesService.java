@@ -13,4 +13,6 @@ public interface ExchangeRatesService {
 
     public ExchangeRate addExchangeRate(ExchangeRate exchangeRate);
 
+    public void updateExchangeRate(ExchangeRate exchangeRate);
+
 }

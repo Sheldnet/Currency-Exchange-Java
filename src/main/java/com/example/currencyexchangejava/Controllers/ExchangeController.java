@@ -86,27 +86,33 @@ public class ExchangeController {
 
     //TODO: Разобраться с патчем
     @PostMapping("/exchangeRates")
-    public ResponseEntity<ExchangeRateDTORequest> addExchangeRate(@RequestBody ExchangeRateDTOResponse exchangeRateDTOResponse) throws Exception {
-        if (exchangeRateDTOResponse.getBaseCurrencyCode() == null ||
-                exchangeRateDTOResponse.getBaseCurrencyCode().trim().isEmpty() ||
-                exchangeRateDTOResponse.getTargetCurrencyCode() == null ||
-                exchangeRateDTOResponse.getTargetCurrencyCode().trim().isEmpty() ||
-                exchangeRateDTOResponse.getRate() <= 0) {
+    public ResponseEntity<ExchangeRateDTORequest> addExchangeRate(@RequestParam("baseCurrencyCode") String baseCurrencyCode,
+                                                                  @RequestParam("targetCurrencyCode") String targetCurrencyCode,
+                                                                  @RequestParam("rate") double rate) throws Exception{
+        if (baseCurrencyCode == null || targetCurrencyCode == null
+        || baseCurrencyCode.trim().isEmpty() || targetCurrencyCode.trim().isEmpty() ||
+        rate <= 0)
+        {
             throw new Exception("Некорректно заполнены поля");
         }
         try {
-            exchangeRatesService.addExchangeRate(factoryService.convertExchangeDTOIntoExchange(exchangeRateDTOResponse));
-            return new ResponseEntity<>(getLastElementIntoDB(), HttpStatus.OK);
+            ExchangeRateDTOResponse exchangeRateDTORespons = new ExchangeRateDTOResponse();
+            exchangeRateDTORespons.setBaseCurrencyCode(baseCurrencyCode);
+            exchangeRateDTORespons.setTargetCurrencyCode(targetCurrencyCode);
+            exchangeRateDTORespons.setRate(rate);
+            exchangeRatesService.addExchangeRate(factoryService.convertExchangeDTOIntoExchange(exchangeRateDTORespons));
+            return new ResponseEntity<>(getLastElementIntoDB(), HttpStatus.CREATED);
         } catch (DataAccessException e) {
-            throw new Exception("Не удается подключиться к БД");
+            throw new Exception("Не удаётся подключится к бд");
         }
     }
 
 
     @PatchMapping("/exchangeRate/{code}")
-    public ResponseEntity<ExchangeRateDTORequest> updateExchangeRate(@PathVariable("code") String code, String rate) throws Exception {
+    public ResponseEntity<ExchangeRateDTORequest> updateExchangeRate(@PathVariable("code") String code,
+                                                                     @RequestParam("rate") double rate) throws Exception {
         try {
-            if (code.isBlank() || Double.parseDouble(rate) <= 0) {
+            if (code.isBlank() || rate <= 0) {
                 throw new Exception("некорректно введены данные");
             }
         } catch (NumberFormatException e) {
@@ -114,22 +120,26 @@ public class ExchangeController {
         }
 
         try {
-            int baseId = factoryService.convertBaseId(code);
-            int targetId = factoryService.convertTargetId(code);
+            String baseCurrencyCode = code.substring(0, 3);
+            String targetCurrencyCode = code.substring(3);
 
-            Currency baseCurrency = currenciesService.findById(baseId);
-            Currency targetCurrency = currenciesService.findById(targetId);
+            Currency baseCurrency = currenciesService.findByCode(baseCurrencyCode);
+            Currency targetCurrency = currenciesService.findByCode(targetCurrencyCode);
 
             var exchangeRate = exchangeRatesService.findExchangeRate(baseCurrency, targetCurrency);
+            if (exchangeRate == null) {
+                throw new Exception("Валютная пара отсутствует в базе данных");
+            }
 
-            exchangeRate.setRate(Double.parseDouble(rate));
-            exchangeRatesService.addExchangeRate(exchangeRate);
+            exchangeRate.setRate(rate);
+            exchangeRatesService.updateExchangeRate(exchangeRate);
 
             return new ResponseEntity<>(factoryService.converterExchangeRateIntoExchangeRateDTO(exchangeRate), HttpStatus.OK);
         } catch (DataAccessException e) {
             throw new Exception("не удается подключиться к бд");
         }
     }
+
 
 
 //    @GetMapping("/exchange/{from}/{to}")
